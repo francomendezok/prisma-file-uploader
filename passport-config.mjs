@@ -1,7 +1,6 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcrypt';
-import session from 'express-session';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -9,12 +8,12 @@ const prisma = new PrismaClient();
 // Configurar LocalStrategy
 passport.use(
   new LocalStrategy(
-    { usernameField: 'email', passwordField: 'password' }, // Campos personalizados
-    async (email, password, done) => {
+    { usernameField: 'username', passwordField: 'password' }, // Campos personalizados
+    async (username, password, done) => {
       try {
         // Buscar usuario en la base de datos con Prisma
         const user = await prisma.user.findUnique({
-          where: { email },
+          where: { username },
         });
 
         if (!user) {

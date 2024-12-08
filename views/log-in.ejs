@@ -9,6 +9,13 @@
 <body>
     <main id="log-in">
         <h1>Log In</h1>
+        <form action="/log-in" method="post">
+            <label for="log-username">Username:</label>
+            <input type="text" id="log-username" name="log-username" required>
+            <label for="log-password">Password:</label>
+            <input type="password" id="log-password" name="log-password" required>
+            <button type="submit">Log In</button>
+        </form>
     </main>
 </body>
 </html>

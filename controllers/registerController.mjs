@@ -2,7 +2,7 @@ import { PrismaSessionStore } from '@quixo3/prisma-session-store'
 import { PrismaClient } from '@prisma/client'
 import { validateCreateUser } from '../controllers/validation.mjs'
 import { validationResult } from 'express-validator'
-import bcrypt, { hash } from 'bcrypt'
+import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
 
@@ -21,15 +21,16 @@ const signUp = [
         try {
             const hashedPassword = await bcrypt.hash(password, 10)
 
-            await prisma.user.create({ // create es undefined. usar bien al client // 
+            const newUser = await prisma.user.create({ 
                 data: {
-                    username: username,           // Email del usuario
-                    password: hashedPassword, // Contraseña encriptada
-                },
+                    username: username,           
+                    password: hashedPassword, 
+                }
             })
-
-            const response = await prisma.user.findMany()
-            console.log(response);
+            const users = await prisma.user.findMany()
+            console.log(newUser);
+            console.log(users)
+            
             
             res.redirect("/log-in?success=true")
         } catch (error) {

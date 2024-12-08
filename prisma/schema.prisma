@@ -14,33 +14,33 @@ datasource db {
 }
 
 // add models (tables) //
-model User {
+model user {
   id       String   @id @default(cuid())
-  username    String   @unique
+  username String   @unique
   password String
-  folders  Folder[] 
-  files    File[]   
+  folders  folder[]
+  files    file[]   
 }
 
-model Folder {
+model folder {
   id        String   @id @default(cuid())
   name      String
   userId    String   
-  user      User     @relation(fields: [userId], references: [id])
-  files     File[]   
+  user      user     @relation(fields: [userId], references: [id])
+  files     file[]   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([name, userId]) 
 }
 
-model File {
+model file {
   id        String   @id @default(cuid())
   name      String
   folderId  String  
-  folder    Folder  @relation(fields: [folderId], references: [id])
+  folder    folder  @relation(fields: [folderId], references: [id])
   userId    String   
-  user      User     @relation(fields: [userId], references: [id])
+  user      user     @relation(fields: [userId], references: [id])
   size      Int      
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

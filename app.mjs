@@ -1,10 +1,12 @@
 import express from 'express'
 import session from 'express-session'
 import passport from './passport-config.mjs'
-import registerRoute from './routes/registerRoute.mjs'
-import logInRoute from './routes/logInRoute.mjs'
 import { PrismaSessionStore } from '@quixo3/prisma-session-store'
 import { PrismaClient } from '@prisma/client'
+
+import registerRoute from './routes/registerRoute.mjs'
+import logInRoute from './routes/logInRoute.mjs'
+import driveRoute from './routes/driveRoute.mjs'
 
 
 const app = express()
@@ -34,12 +36,18 @@ app.use(
 );
 
 
-// Inicializar Passport
 app.use(passport.initialize())
 app.use(passport.session())
+
+// ALWAYS BEFORE I RENDER THE VIEWS !!!! // 
+app.use((req, res, next) => {
+  res.locals.user = req.user || null // user available in all views // 
+  next()
+})
 
 app.get('/', (req, res) => res.render('landing'))
 app.use('/register', registerRoute)
 app.use('/log-in', logInRoute)
+app.use('/drive', driveRoute)
 
 app.listen(3000, () => console.log("Server started on port 3000!"))

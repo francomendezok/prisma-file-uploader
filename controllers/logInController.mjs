@@ -32,7 +32,7 @@ const logIn = [
                     return res.status(500).json({ message: 'Error al iniciar sesión' });
                 }
                 console.log('Authentication successful for user:', user.username);
-                return res.redirect('/');
+                return res.redirect('/drive');
             });
         })(req, res, next);        
     }

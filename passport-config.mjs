@@ -5,49 +5,61 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Configurar LocalStrategy
 passport.use(
   new LocalStrategy(
-    { usernameField: 'username', passwordField: 'password' }, // Campos personalizados
+    { usernameField: 'log-username', passwordField: 'log-password' },
     async (username, password, done) => {
+      console.log('LocalStrategy called with username:', username, 'and password:', password ? '[PRESENT]' : '[MISSING]');
+      
+      if (!username || !password) {
+        console.log('Missing credentials');
+        return done(null, false, { message: 'Missing credentials' });
+      }
+
       try {
-        // Buscar usuario en la base de datos con Prisma
         const user = await prisma.user.findUnique({
           where: { username },
         });
 
         if (!user) {
+          console.log('User not found in database');
           return done(null, false, { message: 'Usuario no encontrado' });
         }
 
-        // Verificar contraseña
         const isMatch = await bcrypt.compare(password, user.password);
+
         if (!isMatch) {
+          console.log('Password does not match');
           return done(null, false, { message: 'Contraseña incorrecta' });
         }
 
+        console.log('Authentication successful');
         return done(null, user);
       } catch (err) {
+        console.error('Error during authentication:', err);
         return done(err);
       }
     }
   )
 );
 
-// Serializar y deserializar usuario
-passport.serializeUser((user, done) => done(null, user.id));
+passport.serializeUser((user, done) => {
+  console.log('Serializing user:', user.id);
+  done(null, user.id);
+});
+
 passport.deserializeUser(async (id, done) => {
+  console.log('Deserializing user:', id);
   try {
-    // Buscar usuario por ID
     const user = await prisma.user.findUnique({
       where: { id },
     });
     done(null, user || false);
   } catch (err) {
+    console.error('Error deserializing user:', err);
     done(err, false);
   }
 });
 
-// Configurar sesión con Prisma Session Store
-
 export default passport;
+

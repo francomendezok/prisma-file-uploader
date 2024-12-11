@@ -49,5 +49,13 @@ app.get('/', (req, res) => res.render('landing'))
 app.use('/register', registerRoute)
 app.use('/log-in', logInRoute)
 app.use('/drive', driveRoute)
+app.get("/log-out", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err)
+    }
+    res.redirect("/")
+  })
+})
 
 app.listen(3000, () => console.log("Server started on port 3000!"))

@@ -8,9 +8,25 @@
 </head>
 <body>
     <div class="container">
+        <!-- Modal container -->
+        <div id="uploadModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Upload File</h2>
+            <div class="upload-area">
+                <form action="/drive" enctype="multipart/form-data" method="post">
+                    <input type="file" name="file" id="file">
+                </form>
+            <div class="upload-icon">☁️</div>
+            <p>Click here to upload</p>
+            <p class="small-text">( File as you like up to 1 MB )</p>
+            </div>
+        </div>
+        </div>
         <aside class="sidebar">
             <div class="sidebar-actions">
-                <button class="action-button">
+                
+                <button id="openModalBtn" class="action-button">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                     </svg>
@@ -58,5 +74,41 @@
             </div>
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('uploadModal');
+            const btn = document.getElementById('openModalBtn');
+            const span = document.getElementsByClassName('close')[0];
+            const uploadArea = document.querySelector('.upload-area');
+            const uploadFile = document.getElementById('file');
+          
+            // Open modal
+            btn.onclick = function() {
+              modal.style.display = 'flex';
+            }
+          
+            // Close modal when clicking (x)
+            span.onclick = function() {
+              modal.style.display = 'none';
+            }
+          
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+              if (event.target == modal) {
+                modal.style.display = 'none';
+              }
+            }
+
+            uploadArea.addEventListener('click', function() {
+                uploadFile.click();
+            });
+
+            uploadFile.addEventListener('change', function(event) {
+                if (this.files.length > 0) {
+                    uploadForm.submit();
+                }
+            });
+        });
+        </script>
 </body>
 </html>

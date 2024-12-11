@@ -1,8 +1,16 @@
+
 const renderDrive = async (req, res) => {
     if (res.locals.user) {
-        console.log(res.locals.user);
+        res.render('drive')
     }
-    res.render('drive')
+    else {
+        res.redirect('log-in')
+    }
 }
 
-export default { renderDrive }
+const upload = async (req, res) => {
+    console.log(req.file, req.body)
+    
+}
+
+export default { renderDrive, upload }

@@ -7,6 +7,8 @@ import { PrismaClient } from '@prisma/client'
 import registerRoute from './routes/registerRoute.mjs'
 import logInRoute from './routes/logInRoute.mjs'
 import driveRoute from './routes/driveRoute.mjs'
+import multer from 'multer'
+const upload = multer({ dest: './public/data/uploads/' })
 
 
 const app = express()
@@ -58,4 +60,14 @@ app.get("/log-out", (req, res, next) => {
   })
 })
 
-app.listen(3000, () => console.log("Server started on port 3000!"))
+
+app.post('/drive', upload.single('uploaded_file'), function (req, res) {
+  if (req.file) {
+    console.log(req.file)
+    res.redirect('/drive')
+  } else {
+    res.redirect('/drive?error=file_upload_failed');
+  }
+})
+
+app.listen(3001, () => console.log("Server started on port 3001!"))

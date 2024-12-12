@@ -8,9 +8,4 @@ const renderDrive = async (req, res) => {
     }
 }
 
-const upload = async (req, res) => {
-    console.log(req.file, req.body)
-    
-}
-
-export default { renderDrive, upload }
+export default { renderDrive }

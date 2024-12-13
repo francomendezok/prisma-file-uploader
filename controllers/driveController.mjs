@@ -1,7 +1,7 @@
 
 const renderDrive = async (req, res) => {
     if (res.locals.user) {
-        res.render('drive')
+        res.render('drive', { files: [] })
     }
     else {
         res.redirect('log-in')

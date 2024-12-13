@@ -3,39 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Subilo Drive</title>
+    <title>My Drive</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Modal container -->
-        <div id="uploadModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Upload File</h2>
-            <div class="upload-area">
-                <form action="/drive" enctype="multipart/form-data" method="post">
-                    <div class="form-group">
-                      <input id="choose-file" type="file" class="form-control-file" name="uploaded_file">
-                      <input id="submit-file" type="submit" value="Upload" class="btn btn-default">
-                    </div>
-                </form>
-            <div class="upload-icon clickbox">☁️</div>
-            <p class="clickbox">Click here to upload</p>
-            <p class="small-text clickbox">( File as you like up to 1 MB )</p>
-            </div>
-        </div>
-        </div>
         <aside class="sidebar">
             <div class="sidebar-actions">
-                
                 <button id="openModalBtn" class="action-button">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                     </svg>
                     Upload File
                 </button>
-                <button class="action-button">
+                <button id="openCreateFolderBtn" class="action-button">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
                     </svg>
@@ -72,52 +53,155 @@
         <main class="main-content">
             <h1 class="main-title">Hello, <%= user.username %>!</h1>
             <h2 class="main-title">My Drive</h2>
-            <div class="files-container">
-                <div class="file-header"></div>
-                <div class="file"></div>
+            <% if (files && files.length > 0) { %>
+                <div class="files-container">
+                    <h1 class="files-title">Files</h1>        
+                    <table class="files-table">
+                        <thead>
+                        <tr>
+                            <th class="name-column">Name</th>
+                            <th class="size-column">Size</th>
+                            <th class="date-column">Created At</th>
+                            <th class="actions-column"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% files.forEach(file => { %>
+                            <tr class="file-row">
+                            <td class="file-name">
+                                <div class="file-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                                    <polyline points="13 2 13 9 20 9"/>
+                                </svg>
+                                </div>
+                                <%= file.name %>
+                            </td>
+                            <td class="file-size"><%= file.size %> KB</td>
+                            <td class="file-date"><%= file.createdAt %></td>
+                            <td class="file-actions">
+                                <button class="action-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="1"/>
+                                    <circle cx="19" cy="12" r="1"/>
+                                    <circle cx="5" cy="12" r="1"/>
+                                </svg>
+                                </button>
+                            </td>
+                            </tr>
+                        <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
                 <p class="empty-message">No files in the folder</p>
-            </div>
+            <% } %>
             <a href="/log-out">Logout</a>
         </main>
+
+        <!-- Upload Modal -->
+        <div id="uploadModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Upload File</h2>
+                <div class="upload-area">
+                    <form action="/drive" enctype="multipart/form-data" method="post">
+                        <div class="form-group">
+                            <input id="choose-file" type="file" class="form-control-file" name="uploaded_file">
+                            <input id="submit-file" type="submit" value="Upload" class="btn btn-default" style="display: none;">
+                        </div>
+                    </form>
+                    <div class="upload-icon clickbox">☁️</div>
+                    <p class="clickbox">Click here to upload</p>
+                    <p class="small-text clickbox">( File as you like up to 1 MB )</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Folder Modal -->
+        <div id="createFolderModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 class="folder-modal-title">Folder Name</h2>
+                <form action="/create-folder" method="POST">
+                    <input type="text" id="folderName" name="folderName" class="folder-input" placeholder="Enter folder name" required>
+                    <input type="submit" value="Create" class="create-button">
+                </form>
+            </div>
+        </div>
     </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('uploadModal');
-            const btn = document.getElementById('openModalBtn');
-            const span = document.getElementsByClassName('close')[0];
-            const uploadArea = document.querySelector('.clickbox');
-            const uploadFile = document.getElementById('choose-file');
-            const uploadForm = document.querySelector('form');
-            const submitFile = document.getElementById('submit-file')
+    document.addEventListener('DOMContentLoaded', function() {
+        // Upload Modal
+        const uploadModal = document.getElementById('uploadModal');
+        const uploadBtn = document.getElementById('openModalBtn');
+        const uploadCloseBtn = uploadModal.querySelector('.close');
+        const uploadArea = uploadModal.querySelector('.clickbox');
+        const uploadFile = document.getElementById('choose-file');
+        const submitFile = document.getElementById('submit-file');
 
-          
-            // Open modal
-            btn.onclick = function() {
-              modal.style.display = 'flex';
-            }
-          
-            // Close modal when clicking (x)
-            span.onclick = function() {
-              modal.style.display = 'none';
-            }
-          
-            // Close modal when clicking outside
-            window.onclick = function(event) {
-              if (event.target == modal) {
-                modal.style.display = 'none';
-              }
-            }
+        // Create Folder Modal
+        const createFolderModal = document.getElementById('createFolderModal');
+        const createFolderBtn = document.getElementById('openCreateFolderBtn');
+        const createFolderCloseBtn = createFolderModal.querySelector('.close');
+        const folderNameInput = document.getElementById('folderName');
+        const createFolderSubmitBtn = document.getElementById('createFolderBtn');
 
-            uploadArea.addEventListener('click', function() {
-                uploadFile.click();
-            });
-            
-            uploadFile.addEventListener('change', function(event) {
-                if (this.files.length > 0) {
-                    submitFile.style.display = 'block'
-                }
-            });
+        // Open Upload Modal
+        uploadBtn.onclick = function() {
+            uploadModal.style.display = 'flex';
+        }
+
+        // Open Create Folder Modal
+        createFolderBtn.onclick = function() {
+            createFolderModal.style.display = 'flex';
+        }
+
+        // Close modals when clicking (x)
+        uploadCloseBtn.onclick = function() {
+            uploadModal.style.display = 'none';
+        }
+        createFolderCloseBtn.onclick = function() {
+            createFolderModal.style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target == uploadModal) {
+                uploadModal.style.display = 'none';
+            }
+            if (event.target == createFolderModal) {
+                createFolderModal.style.display = 'none';
+            }
+        }
+
+        // Upload functionality
+        uploadArea.addEventListener('click', function() {
+            uploadFile.click();
         });
-        </script>
+        
+        uploadFile.addEventListener('change', function(event) {
+            if (this.files.length > 0) {
+                submitFile.style.display = 'block';
+            }
+        });
+
+        // Create Folder functionality
+        createFolderSubmitBtn.addEventListener('click', function() {
+            const folderName = folderNameInput.value.trim();
+            if (folderName) {
+                // Here you would typically send an AJAX request to create the folder
+                console.log('Creating folder:', folderName);
+                // After successful creation, close the modal and maybe refresh the file list
+                createFolderModal.style.display = 'none';
+                folderNameInput.value = '';
+                // Refresh file list or add the new folder to the list
+            } else {
+                alert('Please enter a folder name');
+            }
+        });
+    });
+    </script>
 </body>
 </html>

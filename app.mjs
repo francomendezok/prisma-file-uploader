@@ -60,6 +60,11 @@ app.get("/log-out", (req, res, next) => {
   })
 })
 
+app.post('/create-folder', (req, res) => {
+  console.log('folder created')
+  res.redirect('/')
+})
+
 
 app.post('/drive', upload.single('uploaded_file'), function (req, res) {
   if (req.file) {

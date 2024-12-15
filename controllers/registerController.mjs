@@ -1,4 +1,3 @@
-import { PrismaSessionStore } from '@quixo3/prisma-session-store'
 import { PrismaClient } from '@prisma/client'
 import { validateCreateUser } from '../controllers/validation.mjs'
 import { validationResult } from 'express-validator'

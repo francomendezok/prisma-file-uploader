@@ -7,8 +7,8 @@ import { PrismaClient } from '@prisma/client'
 import registerRoute from './routes/registerRoute.mjs'
 import logInRoute from './routes/logInRoute.mjs'
 import driveRoute from './routes/driveRoute.mjs'
-import multer from 'multer'
-const upload = multer({ dest: './public/data/uploads/' })
+import folderRoute from './routes/folderRoute.mjs'
+
 
 
 const app = express()
@@ -51,6 +51,7 @@ app.get('/', (req, res) => res.render('landing'))
 app.use('/register', registerRoute)
 app.use('/log-in', logInRoute)
 app.use('/drive', driveRoute)
+app.use('/create-folder', folderRoute)
 app.get("/log-out", (req, res, next) => {
   req.logout((err) => {
     if (err) {
@@ -60,19 +61,6 @@ app.get("/log-out", (req, res, next) => {
   })
 })
 
-app.post('/create-folder', (req, res) => {
-  console.log('folder created')
-  res.redirect('/')
-})
 
-
-app.post('/drive', upload.single('uploaded_file'), function (req, res) {
-  if (req.file) {
-    console.log(req.file)
-    res.redirect('/drive')
-  } else {
-    res.redirect('/drive?error=file_upload_failed');
-  }
-})
 
 app.listen(3001, () => console.log("Server started on port 3001!"))

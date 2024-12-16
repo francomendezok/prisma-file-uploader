@@ -1,9 +1,14 @@
 import multer from 'multer'
 const upload = multer({ dest: './public/data/uploads/' })
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 const renderDrive = async (req, res) => {
     if (res.locals.user) {
-        res.render('drive', { files: [] })
+      const folders = await prisma.folder.findMany()
+      // find files and send it to drive //       
+        res.render('drive', { folders: folders, files: [] })
     }
     else {
         res.redirect('log-in')

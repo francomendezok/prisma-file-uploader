@@ -681,6 +681,7 @@ body, html {
     vertical-align: middle;
 }
 
+<<<<<<< HEAD
 /* Modal Styles */
 .modal {
     display: none;
@@ -1081,3 +1082,9 @@ body, html {
 .delete-button:hover {
     background-color: #D32F2F;
 }
+=======
+
+
+/* ... (rest of the styles remain unchanged) ... */
+
+>>>>>>> 6c908a665c5e521e39d5e9f6fabf4d3cbd187932

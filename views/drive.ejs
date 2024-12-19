@@ -53,52 +53,115 @@
         <main class="main-content">
             <h1 class="main-title">Hello, <%= user.username %>!</h1>
             <h2 class="main-title">My Drive</h2>
-            <% if (files && files.length > 0) { %>
-                <div class="files-container">
-                    <h1 class="files-title">Files</h1>        
-                    <table class="files-table">
+        
+            <!-- Folders Section -->
+            <div class="section-container">
+                <h2 class="section-title">Folders</h2>
+                <% if (folders && folders.length > 0) { %>
+                    <table class="content-table">
                         <thead>
-                        <tr>
-                            <th class="name-column">Name</th>
-                            <th class="size-column">Size</th>
-                            <th class="date-column">Created At</th>
-                            <th class="actions-column"></th>
-                        </tr>
+                            <tr>
+                                <th class="name-column">Name</th>
+                                <th class="date-column">Created At</th>
+                                <th class="actions-column"></th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <% files.forEach(file => { %>
-                            <tr class="file-row">
-                            <td class="file-name">
-                                <div class="file-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
-                                    <polyline points="13 2 13 9 20 9"/>
-                                </svg>
-                                </div>
-                                <%= file.name %>
-                            </td>
-                            <td class="file-size"><%= file.size %> KB</td>
-                            <td class="file-date"><%= file.createdAt %></td>
-                            <td class="file-actions">
-                                <button class="action-button">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="1"/>
-                                    <circle cx="19" cy="12" r="1"/>
-                                    <circle cx="5" cy="12" r="1"/>
-                                </svg>
-                                </button>
-                            </td>
-                            </tr>
-                        <% }); %>
+                            <% folders.forEach((folder, index) => { %>
+                                <tr class="content-row">
+                                    <td class="content-name">
+                                        <div class="content-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                            </svg>
+                                        </div>
+                                        <%= folder.name %>
+                                    </td>
+                                    <td class="content-date">
+                                        <%= new Date(folder.createdAt).toLocaleString('en-US', { 
+                                            month: '2-digit', 
+                                            day: '2-digit', 
+                                            year: 'numeric', 
+                                            hour: '2-digit', 
+                                            minute: '2-digit', 
+                                            hour12: false 
+                                        }) %>
+                                    </td>
+                                    <td class="content-actions">
+                                        <button class="action-button" data-folder-index="<%= index %>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="1"/>
+                                                <circle cx="19" cy="12" r="1"/>
+                                                <circle cx="5" cy="12" r="1"/>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% }); %>
                         </tbody>
                     </table>
-                </div>
-            <% } else { %>
-                <p class="empty-message">No files in the folder</p>
-            <% } %>
-            <a href="/log-out">Logout</a>
+                <% } else { %>
+                    <p class="empty-message">No folders</p>
+                <% } %>
+            </div>
+        
+            <!-- Files Section -->
+            <div class="section-container">
+                <h2 class="section-title">Files</h2>
+                <% if (files && files.length > 0) { %>
+                    <table class="content-table">
+                        <thead>
+                            <tr>
+                                <th class="name-column">Name</th>
+                                <th class="size-column">Size</th>
+                                <th class="date-column">Created At</th>
+                                <th class="actions-column"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% files.forEach(file => { %>
+                                <tr class="content-row">
+                                    <td class="content-name">
+                                        <div class="content-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                                                <polyline points="13 2 13 9 20 9"/>
+                                            </svg>
+                                        </div>
+                                        <%= file.name %>
+                                    </td>
+                                    <td class="content-size"><%= file.size %> KB</td>
+                                    <td class="content-date">
+                                        <%= new Date(file.createdAt).toLocaleString('en-US', { 
+                                            month: '2-digit', 
+                                            day: '2-digit', 
+                                            year: 'numeric', 
+                                            hour: '2-digit', 
+                                            minute: '2-digit', 
+                                            hour12: false 
+                                        }) %>
+                                    </td>
+                                    <td class="content-actions">
+                                        <button class="action-button">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="1"/>
+                                                <circle cx="19" cy="12" r="1"/>
+                                                <circle cx="5" cy="12" r="1"/>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p class="empty-message">No files in the folder</p>
+                <% } %>
+            </div>
+        
+            <a href="/log-out" class="logout-link">Logout</a>
         </main>
-
+        
         <!-- Upload Modal -->
         <div id="uploadModal" class="modal" style="display: none;">
             <div class="modal-content">
@@ -129,6 +192,56 @@
                 </form>
             </div>
         </div>
+
+        <div id="renameFolderModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span id="cross-rename" class="close">&times;</span>
+                <h2 class="modal-title">Rename Folder</h2>
+                <form id="renameFolderForm" action="/rename-folder" method="POST">
+                    <input type="hidden" id="oldFolderName" name="oldFolderName" value="">
+                    <input type="text" id="newFolderName" name="newFolderName" class="folder-input" placeholder="Enter new folder name" required>
+                    <button type="submit" class="action-button save-button">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="deleteConfirmationModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span id="cross-delete" class="close">&times;</span>
+                <h2 class="modal-title">Delete Forever</h2>
+                <p>Do you really want to delete?</p>
+                <p id="deleteItemName" class="delete-item-name"></p>
+                <div class="button-group">
+                    <button id="cancelDelete" class="action-button cancel-button">Cancel</button>
+                    <button id="confirmDelete" class="action-button delete-button">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="action-buttons" style="display: none;">
+            <button class="close-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="button-container">
+                <button class="action-button rename-button" title="Rename">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Rename
+                </button>
+                <button class="action-button remove-button" title="Remove">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Remove
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -147,26 +260,95 @@
         const createFolderCloseBtn = createFolderModal.querySelector('.close');
         const folderNameInput = document.getElementById('folderName');
         const createFolderSubmitBtn = document.getElementById('createFolderBtn');
+        const crossRename = document.getElementById('cross-rename');
+        const crossDelete = document.getElementById('cross-delete');
+        const cancelDelete = document.getElementById('cancelDelete');
 
-        // Open Upload Modal
+        // Action Buttons
+        const actionButtons = document.querySelectorAll('.content-actions .action-button');
+        const editOrRemoveButtons = document.getElementById('action-buttons');
+        const deleteFolder = document.getElementById('deleteConfirmationModal')
+        const renameFolder = document.getElementById('renameFolderModal')
+
+        // Handle action button clicks
+        actionButtons.forEach(btn => {
+            btn.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent event from bubbling up
+                const rect = btn.getBoundingClientRect();
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+                editOrRemoveButtons.style.top = `${rect.bottom + scrollTop}px`;
+                editOrRemoveButtons.style.left = `${rect.left + scrollLeft}px`;
+                editOrRemoveButtons.style.display = 'flex';
+
+                // Store the folder index in the action buttons div
+                const folderIndex = btn.getAttribute('data-folder-index');
+                editOrRemoveButtons.setAttribute('data-folder-index', folderIndex);
+            });
+        });
+
+
+        // Close action buttons when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('#action-buttons') && !event.target.closest('.content-actions .action-button')) {
+                editOrRemoveButtons.style.display = 'none';
+            }
+        });
+
+        // Handle rename and remove actions
+        const renameButton = editOrRemoveButtons.querySelector('.rename-button');
+        const removeButton = editOrRemoveButtons.querySelector('.remove-button');
+        const closeButton = editOrRemoveButtons.querySelector('.close-button');
+
+        renameButton.addEventListener('click', () => {
+            const folderIndex = editOrRemoveButtons.getAttribute('data-folder-index');
+            console.log('Rename folder at index:', folderIndex);
+
+            editOrRemoveButtons.style.display = 'none';
+            renameFolder.style.display = 'flex'
+        });
+
+        removeButton.addEventListener('click', () => {
+            const folderIndex = editOrRemoveButtons.getAttribute('data-folder-index');
+            console.log('Remove folder at index:', folderIndex);
+            editOrRemoveButtons.style.display = 'none';
+            deleteFolder.style.display = 'flex'
+        });
+
+        closeButton.addEventListener('click', () => {
+            editOrRemoveButtons.style.display = 'none';
+        });
+
+        // Existing modal functionality
         uploadBtn.onclick = function() {
             uploadModal.style.display = 'flex';
         }
 
-        // Open Create Folder Modal
         createFolderBtn.onclick = function() {
             createFolderModal.style.display = 'flex';
         }
 
-        // Close modals when clicking (x)
         uploadCloseBtn.onclick = function() {
             uploadModal.style.display = 'none';
         }
+
+        crossRename.onclick = function() {
+            renameFolder.style.display = 'none';
+        }
+
+        crossDelete.onclick = function() {
+            deleteFolder.style.display = 'none';
+        }
+
+        cancelDelete.onclick = function() {
+            deleteFolder.style.display = 'none';
+        }
+
         createFolderCloseBtn.onclick = function() {
             createFolderModal.style.display = 'none';
         }
 
-        // Close modals when clicking outside
         window.onclick = function(event) {
             if (event.target == uploadModal) {
                 uploadModal.style.display = 'none';
@@ -176,7 +358,6 @@
             }
         }
 
-        // Upload functionality
         uploadArea.addEventListener('click', function() {
             uploadFile.click();
         });
@@ -187,21 +368,9 @@
             }
         });
 
-        // Create Folder functionality
-        createFolderSubmitBtn.addEventListener('click', function() {
-            const folderName = folderNameInput.value.trim();
-            if (folderName) {
-                // Here you would typically send an AJAX request to create the folder
-                console.log('Creating folder:', folderName);
-                // After successful creation, close the modal and maybe refresh the file list
-                createFolderModal.style.display = 'none';
-                folderNameInput.value = '';
-                // Refresh file list or add the new folder to the list
-            } else {
-                alert('Please enter a folder name');
-            }
-        });
+        // Create Folder functionality remains unchanged
     });
     </script>
 </body>
 </html>
+

@@ -213,9 +213,9 @@
                 <p>Do you really want to delete?</p>
                 <p id="deleteItemName" class="delete-item-name"></p>
                 <div class="button-group">
-                    <form action="/folder/delete" method="POST">
-                        <input type="hidden" id="delfolderID" name="delFolderID" value="">
-                        <button id="cancelDelete" class="action-button cancel-button">Cancel</button>
+                    <form class="button-group" action="/folder/delete" method="POST">
+                        <input type="hidden" id="delfolderID" name="delfolderID" value="">
+                        <button type="button" id="cancelDelete" class="action-button cancel-button">Cancel</button>
                         <button type="submit" id="confirmDelete" class="action-button delete-button">Delete</button>
                     </form>
                 </div>
@@ -362,6 +362,7 @@
         cancelDelete.onclick = function() {
             deleteFolder.style.display = 'none';
         }
+        
 
         createFolderCloseBtn.onclick = function() {
             createFolderModal.style.display = 'none';

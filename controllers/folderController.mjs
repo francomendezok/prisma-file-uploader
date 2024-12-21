@@ -32,6 +32,7 @@ const renameFolder = async (req, res) => {
 }
 
 const deleteFolder = async (req, res) => {
+    console.log(req.body)
     try {
         await prisma.folder.delete({
             where: {

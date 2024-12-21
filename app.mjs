@@ -51,7 +51,7 @@ app.get('/', (req, res) => res.render('landing'))
 app.use('/register', registerRoute)
 app.use('/log-in', logInRoute)
 app.use('/drive', driveRoute)
-app.use('/create-folder', folderRoute)
+app.use('/folder', folderRoute)
 app.get("/log-out", (req, res, next) => {
   req.logout((err) => {
     if (err) {

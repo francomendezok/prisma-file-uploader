@@ -13,4 +13,34 @@ const createFolder = async (req, res) => {
     res.redirect('/drive')
 }
 
-export default { createFolder }
+const renameFolder = async (req, res) => {
+    try {
+        await prisma.folder.update({
+            where: {
+                id: req.body.folderID
+            },
+            data: {
+                name: req.body.newFolderName
+            }
+        })
+        res.redirect('/drive')
+
+    }
+    catch (error) {
+        console.log(error)
+    }
+}
+
+const deleteFolder = async (req, res) => {
+    try {
+        await prisma.folder.delete({
+            where: {
+                id: req.body.delfolderID
+            }
+        })
+        res.redirect('/drive')
+    } catch (error) {
+        console.log(error)
+    }
+}
+export default { createFolder, renameFolder, deleteFolder }

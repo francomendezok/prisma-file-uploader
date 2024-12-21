@@ -6,7 +6,14 @@ const prisma = new PrismaClient()
 
 const renderDrive = async (req, res) => {
     if (res.locals.user) {
-      const folders = await prisma.folder.findMany()
+      const folders = await prisma.folder.findMany({
+        where: {
+          userId: req.user.id
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
       // find files and send it to drive //       
         res.render('drive', { folders: folders, files: [] })
     }

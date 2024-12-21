@@ -88,11 +88,11 @@
                                         }) %>
                                     </td>
                                     <td class="content-actions">
-                                        <button class="action-button" data-folder-index="<%= index %>">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <circle cx="12" cy="12" r="1"/>
-                                                <circle cx="19" cy="12" r="1"/>
-                                                <circle cx="5" cy="12" r="1"/>
+                                        <button class="action-button" data-folder-index="<%= folder.id %>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" data-folder-index="<%= folder.id %>" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle data-folder-index="<%= folder.id %>" cx="12" cy="12" r="1"/>
+                                                <circle data-folder-index="<%= folder.id %>" cx="19" cy="12" r="1"/>
+                                                <circle data-folder-index="<%= folder.id %>" cx="5" cy="12" r="1"/>
                                             </svg>
                                         </button>
                                     </td>
@@ -186,7 +186,8 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <h2 class="folder-modal-title">Folder Name</h2>
-                <form action="/create-folder" method="POST">
+                <form action="/folder/create" method="POST">
+                    <input type="hidden" id="folderId" name="id" value="">
                     <input type="text" id="folderName" name="folderName" class="folder-input" placeholder="Enter folder name" required>
                     <input type="submit" value="Create" class="create-button">
                 </form>
@@ -197,8 +198,8 @@
             <div class="modal-content">
                 <span id="cross-rename" class="close">&times;</span>
                 <h2 class="modal-title">Rename Folder</h2>
-                <form id="renameFolderForm" action="/rename-folder" method="POST">
-                    <input type="hidden" id="oldFolderName" name="oldFolderName" value="">
+                <form id="renameFolderForm" action="/folder/rename" method="POST">
+                    <input type="hidden" id="folderID" name="folderID" value="">
                     <input type="text" id="newFolderName" name="newFolderName" class="folder-input" placeholder="Enter new folder name" required>
                     <button type="submit" class="action-button save-button">Save</button>
                 </form>
@@ -212,8 +213,11 @@
                 <p>Do you really want to delete?</p>
                 <p id="deleteItemName" class="delete-item-name"></p>
                 <div class="button-group">
-                    <button id="cancelDelete" class="action-button cancel-button">Cancel</button>
-                    <button id="confirmDelete" class="action-button delete-button">Delete</button>
+                    <form action="/folder/delete" method="POST">
+                        <input type="hidden" id="delfolderID" name="delFolderID" value="">
+                        <button id="cancelDelete" class="action-button cancel-button">Cancel</button>
+                        <button type="submit" id="confirmDelete" class="action-button delete-button">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -281,6 +285,13 @@
                 editOrRemoveButtons.style.top = `${rect.bottom + scrollTop}px`;
                 editOrRemoveButtons.style.left = `${rect.left + scrollLeft}px`;
                 editOrRemoveButtons.style.display = 'flex';
+                const folderElement = event.target.closest('[data-folder-index]');
+                if (folderElement) {
+                    const folderIndex = folderElement.getAttribute('data-folder-index');
+                    console.log(folderIndex);
+                } else {
+                    console.log('No se encontró un elemento con data-folder-index');
+                }
 
                 // Store the folder index in the action buttons div
                 const folderIndex = btn.getAttribute('data-folder-index');
@@ -305,6 +316,9 @@
             const folderIndex = editOrRemoveButtons.getAttribute('data-folder-index');
             console.log('Rename folder at index:', folderIndex);
 
+            const folderIdInput = document.getElementById('folderID');
+            folderIdInput.value = folderIndex;
+
             editOrRemoveButtons.style.display = 'none';
             renameFolder.style.display = 'flex'
         });
@@ -312,6 +326,10 @@
         removeButton.addEventListener('click', () => {
             const folderIndex = editOrRemoveButtons.getAttribute('data-folder-index');
             console.log('Remove folder at index:', folderIndex);
+
+            const folderIdInput = document.getElementById('delfolderID');
+            folderIdInput.value = folderIndex;
+
             editOrRemoveButtons.style.display = 'none';
             deleteFolder.style.display = 'flex'
         });

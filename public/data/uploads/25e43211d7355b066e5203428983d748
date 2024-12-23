@@ -1,3 +1,0 @@
-sudo mysql -u root -p
-USE renaper;
-SOURCE /mnt/c/Users/francomendezok/Documents/personas/personas/personas_12.sql;

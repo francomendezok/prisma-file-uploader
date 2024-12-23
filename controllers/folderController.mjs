@@ -4,18 +4,28 @@ const prisma = new PrismaClient()
 
 const getFolder = async (req, res) => {
     try {
-        const folderId = req.query.folderId; // Captura el parámetro de la URL
+        const filesIds = await prisma.fileFolder.findMany({
+            where: { folderId: req.query.folderId },
+            select: { fileId: true }, // Seleccionamos solo el fileId
+          });
+          
+          const files = await prisma.file.findMany({
+            where: {
+              id: { in: filesIds.map(file => file.fileId) } // Filtra por los fileIds obtenidos
+            }
+          });
+          
         const folder = await prisma.folder.findUnique({
-            where: { id: folderId }
+            where: { id: req.query.folderId }
         });
 
         if (!folder) {
             return res.status(404).send('Folder not found');
         }
-
+        console.log(files)
         // Renderiza la vista o envía la respuesta con la información del folder
         // pasar la folder y los files // 
-        res.render('folder', {folder: folder, files: folder});
+        res.render('folder', {folder: folder, files: files});
     } catch (error) {
         console.error('Error fetching folder:', error);
         res.status(500).send('Internal server error');

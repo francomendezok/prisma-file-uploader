@@ -177,6 +177,15 @@
                     <form action="/drive" enctype="multipart/form-data" method="post">
                         <div class="form-group">
                             <input id="choose-file" type="file" class="form-control-file" name="uploaded_file">
+                            <div class="folder-selection">
+                                <h3>Select folder:</h3>
+                                <% folders.forEach(folder => { %>
+                                    <div class="folder-option">
+                                        <input type="checkbox" id="folder-<%= folder.id %>" name="selectedFolders" value="<%= folder.id %>">
+                                        <label for="folder-<%= folder.id %>"><%= folder.name %></label>
+                                    </div>
+                                <% }); %>
+                            </div>
                             <input id="submit-file" type="submit" value="Upload" class="btn btn-default" style="display: none;">
                         </div>
                     </form>

@@ -1,5 +1,6 @@
 import express from 'express'
 import session from 'express-session'
+import fileUpload from 'express-fileupload';
 import passport from './passport-config.mjs'
 import { PrismaSessionStore } from '@quixo3/prisma-session-store'
 import { PrismaClient } from '@prisma/client'
@@ -40,6 +41,10 @@ app.use(
 
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: '/tmp/',
+}));
 
 // ALWAYS BEFORE I RENDER THE VIEWS !!!! // 
 app.use((req, res, next) => {
@@ -63,4 +68,4 @@ app.get("/log-out", (req, res, next) => {
 
 
 
-app.listen(3001, () => console.log("Server started on port 3001!"))
+app.listen(3000, () => console.log("Server started on port 3000!"))

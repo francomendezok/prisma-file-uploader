@@ -594,7 +594,6 @@ body, html {
     display: flex;
     align-items: center;
     gap: 12px;
-    cursor: pointer;
 }
 
 .content-icon {
@@ -694,5 +693,218 @@ body, html {
     border: none;
     box-shadow: none;
     cursor: pointer;
+}
+
+
+
+#action-buttons {
+    position: absolute;
+    background-color: #463E33;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: none;
+    flex-direction: column;
+    min-width: 160px;
+    z-index: 1000;
+}
+
+.close-button {
+    display: none; /* Hide the close button since we want a compact menu */
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+}
+
+.rename-button, .remove-button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.rename-button svg, .remove-button svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    stroke: currentColor;
+}
+
+.rename-button:hover, .remove-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #463E33;
+    padding: 24px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+}
+
+.modal .close {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    color: #9E9E9E;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.modal .close:hover {
+    color: #fff;
+}
+
+.modal-title {
+    color: #E3A853;
+    font-size: 20px;
+    margin-bottom: 24px;
+    font-weight: normal;
+}
+
+/* Rename Modal Specific Styles */
+.folder-input {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid #E3A853;
+    color: white;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    font-size: 16px;
+}
+
+.folder-input:focus {
+    outline: none;
+    border-color: #E3A853;
+}
+
+.folder-input::placeholder {
+    color: #9E9E9E;
+}
+
+.save-button {
+    width: 100%;
+    background-color: #1B5E20;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.save-button:hover {
+    background-color: #2E7D32;
+}
+
+.folder-selection {
+    margin-top: 20px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.folder-selection h3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #fff;
+}
+
+.folder-option {
+    margin-bottom: 5px;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.folder-option label {
+    color: #fff;
+}
+
+
+/* Delete Modal Specific Styles */
+.modal p {
+    color: white;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.delete-item-name {
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 24px;
+}
+
+.button-group {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+.cancel-button {
+    background-color: transparent;
+    border: 1px solid #9E9E9E;
+    color: white;
+    padding: 12px 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    flex: 1;
+}
+
+.cancel-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.delete-button {
+    background-color: #C62828;
+    border: none;
+    color: white;
+    padding: 12px 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    flex: 1;
+}
+
+.delete-button:hover {
+    background-color: #D32F2F;
 }
 

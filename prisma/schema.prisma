@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,47 +7,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// add models (tables) //
 model user {
   id       String   @id @default(cuid())
   username String   @unique
   password String
-  folders  folder[]
-  files    file[]   
-}
-
-model folder {
-  id        String   @id @default(cuid())
-  name      String
-  userId    String   
-  user      user     @relation(fields: [userId], references: [id])
-  files     file[]   
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([name, userId]) 
+  folders  folder[] @relation("UserFolders") // Relación a `folder`
+  files    file[]   @relation("UserFiles")   // Relación a `file`
 }
 
 model file {
   id        String   @id @default(cuid())
   name      String
-  folderId  String  
-  folder    folder  @relation(fields: [folderId], references: [id])
-  userId    String   
-  user      user     @relation(fields: [userId], references: [id])
-  size      Int      
+  url       String
+  userId    String
+  user      user     @relation("UserFiles", fields: [userId], references: [id])
+  size      Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  folders   FileFolder[] // Relación a la tabla intermedia
+}
 
-  @@unique([name, folderId]) 
+model folder {
+  id        String        @id @default(cuid())
+  name      String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  userId    String         // Relación con el usuario
+  user      user           @relation("UserFolders", fields: [userId], references: [id])
+  files     FileFolder[]   // Relación a la tabla intermedia
+}
+
+/// Tabla intermedia para la relación muchos a muchos
+model FileFolder {
+  fileId   String
+  folderId String
+  file     file   @relation(fields: [fileId], references: [id])   // Relación con `file`
+  folder   folder @relation(fields: [folderId], references: [id]) // Relación con `folder`
+
+  @@id([fileId, folderId]) // Clave primaria compuesta
 }
 
 model Session {
-  id        String   @id
+  id        String   @id @default(cuid()) // Agregado valor predeterminado
   sid       String   @unique
-  data      String   
-  expiresAt   DateTime
+  data      String
+  expiresAt DateTime
 }
-
-// users, folders, files // 
-

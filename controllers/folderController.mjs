@@ -2,6 +2,28 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+const renderDrive = async (req, res) => {
+  if (res.locals.user) {
+    try {
+      const folders = await prisma.folder.findMany({
+        where: {
+          userId: req.user.id,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      res.render('drive', { folders });
+    } catch (err) {
+      console.error('Error al cargar Drive:', err);
+      res.redirect('/drive?error=load_failed');
+    }
+  } else {
+    res.redirect('/log-in');
+  }
+};
+
 const getFolder = async (req, res) => {
     try {
         const filesIds = await prisma.fileFolder.findMany({
@@ -74,4 +96,6 @@ const deleteFolder = async (req, res) => {
         console.log(error)
     }
 }
-export default { getFolder, createFolder, renameFolder, deleteFolder }
+
+
+export default { renderDrive, getFolder, createFolder, renameFolder, deleteFolder }

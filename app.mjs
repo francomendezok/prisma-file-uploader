@@ -7,8 +7,8 @@ import { PrismaClient } from '@prisma/client'
 
 import registerRoute from './routes/registerRoute.mjs'
 import logInRoute from './routes/logInRoute.mjs'
-import driveRoute from './routes/driveRoute.mjs'
 import folderRoute from './routes/folderRoute.mjs'
+import filesRoute from './routes/filesRoute.mjs'
 
 
 
@@ -55,8 +55,8 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => res.render('landing'))
 app.use('/register', registerRoute)
 app.use('/log-in', logInRoute)
-app.use('/drive', driveRoute)
-app.use('/folder', folderRoute)
+app.use('/drive', folderRoute)
+app.use('/files', filesRoute)
 app.get("/log-out", (req, res, next) => {
   req.logout((err) => {
     if (err) {

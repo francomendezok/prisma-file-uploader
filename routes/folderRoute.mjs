@@ -3,12 +3,15 @@ import folderController from '../controllers/folderController.mjs'
 
 const router = Router()
 
-router.get('/:folderID', folderController.getFolder)
 
-router.post('/create', folderController.createFolder)
+router.get('/', folderController.renderDrive)
 
-router.post('/rename', folderController.renameFolder)
+router.get('/folder/:folderID', folderController.getFolder)
 
-router.post('/delete', folderController.deleteFolder)
+router.post('/folder/create', folderController.createFolder)
+
+router.post('/folder/rename', folderController.renameFolder)
+
+router.post('/folder/delete', folderController.deleteFolder)
 
 export default router

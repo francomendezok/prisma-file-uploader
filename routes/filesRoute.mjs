@@ -11,4 +11,6 @@ router.post('/rename', filesController.renameFile)
 
 router.post('/delete', filesController.deleteFile)
 
+router.get('/download/:folderIndex', filesController.downloadFile)
+
 export default router

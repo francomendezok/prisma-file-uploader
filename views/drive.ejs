@@ -60,7 +60,7 @@
                         <tbody>
                             <% folders.forEach((folder) => { %>
                                 <tr id="folder" class="content-row">
-                                    <form action="/folder/<%= folder.id %>" method="GET" style="display: contents;">
+                                    <form action="/drive/folder/<%= folder.id %>" method="GET" style="display: contents;">
                                         <input type="hidden" name="folderId" value="<%= folder.id %>">
                                         <td class="content-name">
                                             <button type="submit" class="content-button">
@@ -102,59 +102,6 @@
                 <% } %>
             </div>
         
-            <!-- Files Section -->
-            <div class="section-container">
-                <h2 class="section-title">Files</h2>
-                <% if (files && files.length > 0) { %>
-                    <table class="content-table">
-                        <thead>
-                            <tr>
-                                <th class="name-column">Name</th>
-                                <th class="size-column">Size</th>
-                                <th class="date-column">Created At</th>
-                                <th class="actions-column"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% files.forEach(file => { %>
-                                <tr class="content-row">
-                                    <td class="content-name">
-                                        <div class="content-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
-                                                <polyline points="13 2 13 9 20 9"/>
-                                            </svg>
-                                        </div>
-                                        <%= file.name %>
-                                    </td>
-                                    <td class="content-size"><%= file.size %> KB</td>
-                                    <td class="content-date">
-                                        <%= new Date(file.createdAt).toLocaleString('en-US', { 
-                                            month: '2-digit', 
-                                            day: '2-digit', 
-                                            year: 'numeric', 
-                                            hour: '2-digit', 
-                                            minute: '2-digit', 
-                                            hour12: false 
-                                        }) %>
-                                    </td>
-                                    <td class="content-actions">
-                                        <button class="action-button">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <circle cx="12" cy="12" r="1"/>
-                                                <circle cx="19" cy="12" r="1"/>
-                                                <circle cx="5" cy="12" r="1"/>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                            <% }); %>
-                        </tbody>
-                    </table>
-                <% } else { %>
-                    <p class="empty-message">No files in the folder</p>
-                <% } %>
-            </div>
         
             <a href="/log-out" class="logout-link">Logout</a>
         </main>
@@ -165,7 +112,7 @@
                 <span class="close">&times;</span>
                 <h2>Upload File</h2>
                 <div class="upload-area">
-                    <form action="/drive" enctype="multipart/form-data" method="post">
+                    <form action="/files/create" enctype="multipart/form-data" method="post">
                         <div class="form-group">
                             <input id="choose-file" type="file" class="form-control-file" name="uploaded_file">
                             <div class="folder-selection">
@@ -180,19 +127,19 @@
                             <input id="submit-file" type="submit" value="Upload" class="btn btn-default" style="display: none;">
                         </div>
                     </form>
+                    <label for="choose-file" id="file-label">Choose file</label>
                     <div class="upload-icon clickbox">☁️</div>
                     <p class="clickbox">Click here to upload</p>
                     <p class="small-text clickbox">( File as you like up to 1 MB )</p>
                 </div>
             </div>
         </div>
-
         <!-- Create Folder Modal -->
         <div id="createFolderModal" class="modal" style="display: none;">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <h2 class="folder-modal-title">Folder Name</h2>
-                <form action="/folder/create" method="POST">
+                <form action="/drive/folder/create" method="POST">
                     <input type="hidden" id="folderId" name="id" value="">
                     <input type="text" id="folderName" name="folderName" class="folder-input" placeholder="Enter folder name" required>
                     <input type="submit" value="Create" class="create-button">
@@ -204,7 +151,7 @@
             <div class="modal-content">
                 <span id="cross-rename" class="close">&times;</span>
                 <h2 class="modal-title">Rename Folder</h2>
-                <form id="renameFolderForm" action="/folder/rename" method="POST">
+                <form id="renameFolderForm" action="/drive/folder/rename" method="POST">
                     <input type="hidden" id="folderID" name="folderID" value="">
                     <input type="text" id="newFolderName" name="newFolderName" class="folder-input" placeholder="Enter new folder name" required>
                     <button type="submit" class="action-button save-button">Save</button>
@@ -219,7 +166,7 @@
                 <p>Do you really want to delete?</p>
                 <p id="deleteItemName" class="delete-item-name"></p>
                 <div class="button-group">
-                    <form class="button-group" action="/folder/delete" method="POST">
+                    <form class="button-group" action="/drive/folder/delete" method="POST">
                         <input type="hidden" id="delfolderID" name="delfolderID" value="">
                         <button type="button" id="cancelDelete" class="action-button cancel-button">Cancel</button>
                         <button type="submit" id="confirmDelete" class="action-button delete-button">Delete</button>
@@ -393,7 +340,11 @@
             }
         });
 
-        // Create Folder functionality remains unchanged
+        document.getElementById("choose-file").addEventListener("change", function (event) {
+            const fileInput = event.target;
+            const fileName = fileInput.files[0] ? fileInput.files[0].name : "Choose file";
+            document.getElementById("file-label").textContent = fileName;
+        });
     });
     </script>
 </body>

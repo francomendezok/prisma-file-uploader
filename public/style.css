@@ -718,7 +718,7 @@ body, html {
     padding: 4px;
 }
 
-.rename-button, .remove-button {
+.rename-button, .remove-button, .download-button {
     display: flex;
     align-items: center;
     width: 100%;
@@ -732,14 +732,14 @@ body, html {
     border-radius: 4px;
 }
 
-.rename-button svg, .remove-button svg {
+.rename-button svg, .remove-button svg, .download-button svg {
     width: 16px;
     height: 16px;
     margin-right: 8px;
     stroke: currentColor;
 }
 
-.rename-button:hover, .remove-button:hover {
+.rename-button:hover, .remove-button:hover, .download-button:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 

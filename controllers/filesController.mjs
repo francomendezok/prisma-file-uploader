@@ -31,7 +31,6 @@ const viewFiles = async (req, res) => {
 
 const uploadFile = async (req, res) => {
     try {
-        console.log(req.body)
         if (!req.files.uploaded_file) {
         return res.redirect('/drive?error=no_file');
         }
@@ -102,17 +101,15 @@ const uploadFile = async (req, res) => {
         console.error("No se seleccionaron carpetas");
         }
 
-        res.redirect('/drive?success=file_uploaded');
+        res.redirect('/files');
     } catch (err) {
         console.error('Error al subir archivo:', err);
-        res.redirect('/drive?error=upload_failed');
+        res.redirect('/files?error=upload_failed');
     }
 };
 
-
 const renameFile = async (req, res) => {
-    console.log(req.body.id);
-    res.json({message: "funciona el update"})
+    res.json({id: req.body.fileID})
 
     // try {
     //     await prisma.file.update({
@@ -130,7 +127,19 @@ const renameFile = async (req, res) => {
 }
 
 const deleteFile = async (req, res) => {
-    res.json({message: "funciona el delete"})
+    res.json({id: req.body.delFileID})
 }
 
-export default { viewFiles, uploadFile, renameFile, deleteFile }
+const downloadFile = async (req, res) => {
+    res.json({id: req.params.folderIndex })
+    // const { data, error } = await supabase
+    // .storage
+    // .from('odin_files')
+    // .download('ruta/al/archivo.ext')
+
+    // if (error) {
+    //     return res.status(500).json({ error: error.message });
+    // }
+}
+
+export default { viewFiles, uploadFile, renameFile, deleteFile, downloadFile }

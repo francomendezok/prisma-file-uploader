@@ -26,6 +26,15 @@ const renderDrive = async (req, res) => {
 
 const getFolder = async (req, res) => {
     try {
+        const folders = await prisma.folder.findMany({
+          where: {
+            userId: req.user.id,
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        });
+
         const filesIds = await prisma.fileFolder.findMany({
             where: { folderId: req.query.folderId },
             select: { fileId: true }, // Seleccionamos solo el fileId
@@ -47,7 +56,7 @@ const getFolder = async (req, res) => {
         console.log(files)
         // Renderiza la vista o envía la respuesta con la información del folder
         // pasar la folder y los files // 
-        res.render('folder', {folder: folder, files: files});
+        res.render('folder', {folder, files, folders });
     } catch (error) {
         console.error('Error fetching folder:', error);
         res.status(500).send('Internal server error');
@@ -84,18 +93,25 @@ const renameFolder = async (req, res) => {
 }
 
 const deleteFolder = async (req, res) => {
-    console.log(req.body)
-    try {
-        await prisma.folder.delete({
-            where: {
-                id: req.body.delfolderID
-            }
-        })
-        res.redirect('/drive')
-    } catch (error) {
-        console.log(error)
-    }
-}
+  const { delfolderID } = req.body;
+
+  try {
+      await prisma.fileFolder.deleteMany({
+          where: { folderId: delfolderID }
+      });    
+
+      await prisma.folder.delete({
+          where: { id: delfolderID }
+      });
+
+      res.redirect('/drive');
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Error deleting folder');
+  }
+};
+
+
 
 
 export default { renderDrive, getFolder, createFolder, renameFolder, deleteFolder }

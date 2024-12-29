@@ -80,12 +80,12 @@
                                             hour12: false 
                                         }) %>
                                     </td>
-                                    <td class="content-actions">
-                                        <button class="action-button">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <circle cx="12" cy="12" r="1"/>
-                                                <circle cx="19" cy="12" r="1"/>
-                                                <circle cx="5" cy="12" r="1"/>
+                                    <td class="content-actions" data-file-index="<%= file.id %>">
+                                        <button class="action-button" data-file-index="<%= file.id %>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-file-index="<%= file.id %>">
+                                                <circle cx="12" cy="12" r="1" data-file-index="<%= file.id %>"/>
+                                                <circle cx="19" cy="12" r="1" data-file-index="<%= file.id %>"/>
+                                                <circle cx="5" cy="12" r="1" data-file-index="<%= file.id %>"/>
                                             </svg>
                                         </button>
                                     </td>
@@ -134,7 +134,7 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <h2 class="folder-modal-title">Folder Name</h2>
-                <form action="/folder/create" method="POST">
+                <form action="/drive/folder/create" method="POST">
                     <input type="hidden" id="folderId" name="id" value="">
                     <input type="text" id="folderName" name="folderName" class="folder-input" placeholder="Enter folder name" required>
                     <input type="submit" value="Create" class="create-button">
@@ -145,10 +145,10 @@
         <div id="renameFolderModal" class="modal" style="display: none;">
             <div class="modal-content">
                 <span id="cross-rename" class="close">&times;</span>
-                <h2 class="modal-title">Rename Folder</h2>
+                <h2 class="modal-title">Rename File</h2>
                 <form id="renameFolderForm" action="/files/rename" method="POST">
-                    <input type="hidden" id="folderID" name="folderID" value="">
-                    <input type="text" id="newFolderName" name="newFolderName" class="folder-input" placeholder="Enter new folder name" required>
+                    <input type="hidden" id="fileID" name="fileID" value="">
+                    <input type="text" id="newFileName" name="newFileName" class="folder-input" placeholder="Enter new folder name" required>
                     <button type="submit" class="action-button save-button">Save</button>
                 </form>
             </div>
@@ -162,7 +162,7 @@
                 <p id="deleteItemName" class="delete-item-name"></p>
                 <div class="button-group">
                     <form class="button-group" action="/files/delete" method="POST">
-                        <input type="hidden" id="delfolderID" name="delfolderID" value="">
+                        <input type="hidden" id="delFileID" name="delFileID" value="">
                         <button type="button" id="cancelDelete" class="action-button cancel-button">Cancel</button>
                         <button type="submit" id="confirmDelete" class="action-button delete-button">Delete</button>
                     </form>
@@ -241,17 +241,17 @@
                 editOrRemoveButtons.style.top = `${rect.bottom + scrollTop}px`;
                 editOrRemoveButtons.style.left = `${rect.left + scrollLeft}px`;
                 editOrRemoveButtons.style.display = 'flex';
-                const folderElement = event.target.closest('[data-folder-index]');
-                if (folderElement) {
-                    const folderIndex = folderElement.getAttribute('data-folder-index');
-                    console.log(folderIndex);
+                const fileElement = event.target.closest('[data-file-index]');
+                if (fileElement) {
+                    const fileIndex = fileElement.getAttribute('data-file-index');
+                    console.log(fileIndex);
                 } else {
-                    console.log('No se encontró un elemento con data-folder-index');
+                    console.log('No se encontró un elemento con data-file-index');
                 }
 
                 // Store the folder index in the action buttons div
-                const folderIndex = btn.getAttribute('data-folder-index');
-                editOrRemoveButtons.setAttribute('data-folder-index', folderIndex);
+                const fileIndex = btn.getAttribute('data-file-index');
+                editOrRemoveButtons.setAttribute('data-file-index', fileIndex);
             });
         });
 
@@ -281,55 +281,27 @@
         const closeButton = editOrRemoveButtons.querySelector('.close-button');
 
         renameButton.addEventListener('click', () => {
-            const folderIndex = editOrRemoveButtons.getAttribute('data-folder-index');
-            console.log('Rename folder at index:', folderIndex);
+            const fileIndex = editOrRemoveButtons.getAttribute('data-file-index');
+            console.log('Rename folder at index:', fileIndex);
 
-            const folderIdInput = document.getElementById('folderID');
-            folderIdInput.value = folderIndex;
+            const fileIdInput = document.getElementById('fileID');
+            fileIdInput.value = fileIndex;
 
             editOrRemoveButtons.style.display = 'none';
             renameFolder.style.display = 'flex'
         });
 
         removeButton.addEventListener('click', () => {
-            const folderIndex = editOrRemoveButtons.getAttribute('data-folder-index');
-            console.log('Remove folder at index:', folderIndex);
+            const fileIndex = editOrRemoveButtons.getAttribute('data-file-index');
+            console.log('Remove folder at index:', fileIndex);
 
-            const folderIdInput = document.getElementById('delfolderID');
-            folderIdInput.value = folderIndex;
+            const fileIdInput = document.getElementById('delFileID');
+            fileIdInput.value = fileIndex;
 
             editOrRemoveButtons.style.display = 'none';
             deleteFolder.style.display = 'flex'
         });
 
-        document.addEventListener('click', function(event) {
-        // Verificar si el clic fue en un botón de acción
-        if (event.target.closest('.action-button')) {
-            // Encontrar el .content-row más cercano
-            const row = event.target.closest('.content-row');
-            if (row) {
-                // Obtener el data-file-index
-                const fileIndex = row.getAttribute('data-file-index');
-                console.log('File Index:', fileIndex);
-
-                // Encontrar y ocultar los botones de acción en esta fila
-                const actionButtons = row.querySelector('.content-actions');
-                if (actionButtons) {
-                    actionButtons.style.display = 'none';
-                }
-
-                // Iniciar la descarga
-                if (fileIndex) {
-                    setTimeout(() => {
-                        window.location.href = `/files/download/${fileIndex}`;
-                    }, 100);
-                } else {
-                    console.error('File index not found');
-                    // Opcionalmente, muestra un mensaje de error al usuario
-                }
-            }
-        }
-    });
 
         closeButton.addEventListener('click', () => {
             editOrRemoveButtons.style.display = 'none';
@@ -390,9 +362,24 @@
             const fileName = fileInput.files[0] ? fileInput.files[0].name : "Choose file";
             document.getElementById("file-label").textContent = fileName;
         });
-    });
 
-    
+        const download = document.querySelector('.download-button')
+
+        download.addEventListener('click', function(e) {
+            const fileIndex = editOrRemoveButtons.getAttribute('data-file-index');
+            console.log(fileIndex);
+
+            const fileIdInput = document.getElementById('fileID');
+            fileIdInput.value = fileIndex;
+
+
+            if (fileIndex) {
+                window.location.href = `/files/download/${fileIndex}`;
+            } else {
+                console.error('No se encontró un elemento con data-file-index');
+            }
+        })
+    });
     </script>
 </body>
 </html>
